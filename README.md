@@ -36,6 +36,7 @@ hello_world_blueprint/
 1. **Installa le dipendenze:**
    ```bash
    git clone https://github.com/wakeiq/Progetto_Finale_M340_Paolo_Comes.git
+   cd Progetto_Finale_M340_Paolo_Comes
    python -m venv venv
    pip install -r requirements.txt
    ```
@@ -75,13 +76,11 @@ hello_world_blueprint/
    
    Oppure semplicemente avvia l'app (il database viene creato automaticamente):
    ```bash
-   python app.py
+   flask run --host=0.0.0.0 --port=5000
    ```
 
 5. **Avvia l'applicazione:**
    ```bash
-   python app.py
-   oppure
    flask run --host=0.0.0.0 --port=5000
    ```
 
@@ -261,7 +260,7 @@ Se hai problemi con il login:
 
 ## Note di Sicurezza
 
-⚠️ **IMPORTANTE:** Questo progetto è per scopi didattici/demo.
+**IMPORTANTE:** Questo progetto è per scopi didattici/demo.
 
 Per un ambiente di produzione:
 - Usa password più sicure
@@ -271,4 +270,5 @@ Per un ambiente di produzione:
 ## Licenza
 
 Progetto educativo - uso libero.
+
 
