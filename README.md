@@ -81,11 +81,13 @@ hello_world_blueprint/
 5. **Avvia l'applicazione:**
    ```bash
    python app.py
+   oppure
+   flask run --host=0.0.0.0 --port=5000
    ```
 
 6. **Apri il browser:**
    ```
-   http://localhost:5000
+   http://192.168.56.20:5000
    ```
 
 ## Credenziali di Default
@@ -269,3 +271,4 @@ Per un ambiente di produzione:
 ## Licenza
 
 Progetto educativo - uso libero.
+
