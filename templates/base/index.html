@@ -1,0 +1,99 @@
+{% extends "base.html" %}
+
+{% block title %}Dashboard{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="row">
+        <div class="col-12">
+            <h2 class="mb-4">Benvenuto, {{ username }}</h2>
+        </div>
+    </div>
+    
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="mb-0">Richiedi una nuova VM</h5>
+                </div>
+                <div class="card-body">
+                    <form method="POST" action="{{ url_for('base.request_vm') }}">
+                        <div class="mb-3">
+                            <label for="vm_type" class="form-label">Tipo VM</label>
+                            <select class="form-select" id="vm_type" name="vm_type" required>
+                                <option value="">Seleziona tipo</option>
+                                <option value="Bronze">Bronze</option>
+                                <option value="Silver">Silver</option>
+                                <option value="Gold">Gold</option>
+                            </select>
+                        </div>
+                        <button type="submit" class="btn btn-primary">Invia Richiesta</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="mb-0">Le tue richieste VM</h5>
+                </div>
+                <div class="card-body">
+                    {% if vm_requests %}
+                        <div class="table-responsive">
+                            <table class="table table-hover">
+                                <thead>
+                                    <tr>
+                                        <th>ID</th>
+                                        <th>Tipo</th>
+                                        <th>Stato</th>
+                                        <th>Dettagli</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for req in vm_requests %}
+                                    <tr>
+                                        <td>{{ req.id }}</td>
+                                        <td><span class="badge bg-secondary">{{ req.vm_type }}</span></td>
+                                        <td>
+                                            {% if req.status == 'PENDING' %}
+                                                <span class="badge bg-warning text-dark">PENDING</span>
+                                            {% elif req.status == 'APPROVED' %}
+                                                <span class="badge bg-success">APPROVED</span>
+                                            {% else %}
+                                                <span class="badge bg-danger">REJECTED</span>
+                                            {% endif %}
+                                        </td>
+                                        <td>
+                                            {% if req.status == 'APPROVED' %}
+                                                <div class="small">
+                                                    <p class="mb-2"><strong>Accesso SSH:</strong></p>
+                                                    <div class="bg-light p-2 rounded mb-2">
+                                                        <code class="d-block">ssh root@{{ req.ip or 'N/A' }}</code>
+                                                    </div>
+                                                    <p class="mb-1"><strong>IP:</strong> {{ req.ip or 'N/A' }}</p>
+                                                    <p class="mb-1"><strong>User:</strong> {{ req.vm_user or 'root' }}</p>
+                                                    <p class="mb-1"><strong>Password:</strong> Password&1</p>
+                                                    <p class="mb-0"><strong>CTID:</strong> {{ req.vm_id_proxmox or 'N/A' }}</p>
+                                                </div>
+                                            {% elif req.status == 'REJECTED' %}
+                                                <span class="text-danger">Richiesta rifiutata</span>
+                                            {% else %}
+                                                <span class="text-muted">In attesa di approvazione</span>
+                                            {% endif %}
+                                        </td>
+                                    </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    {% else %}
+                        <p class="text-muted mb-0">Nessuna richiesta VM. Crea una nuova richiesta sopra.</p>
+                    {% endif %}                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

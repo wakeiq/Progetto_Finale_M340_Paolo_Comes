@@ -1,0 +1,10 @@
+@hostname = localhost
+@port = 5000
+@host = {{hostname}}:{{port}}
+
+### Test form POST
+POST http://{{host}}/form HTTP/1.1
+
+### Test form GET
+
+GET http://{{host}}/form HTTP/1.1

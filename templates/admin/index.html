@@ -1,0 +1,91 @@
+{% extends "base.html" %}
+
+{% block title %}Admin Dashboard{% endblock %}
+
+{% block navbar_brand %}VM Manager - Admin{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="row">
+        <div class="col-12">
+            <h2 class="mb-4">Gestione Richieste VM</h2>
+            <p class="text-danger mb-0">Attnezione: quando si approva la richiesta di una VM, NON ricaricare la pagina e no cliccare rifiuta per alcun motivo, dopo 3 minuti circa verrá notificato che la VM é stata creata. L'utente riceverá i parametri per connettersi a ssh</p>
+        </div>
+    </div>
+    
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="mb-0">Tutte le richieste</h5>
+                </div>
+                <div class="card-body">
+                    {% if vm_requests %}
+                        <div class="table-responsive">
+                            <table class="table table-hover">
+                                <thead>
+                                    <tr>
+                                        <th>ID</th>
+                                        <th>Utente</th>
+                                        <th>Tipo</th>
+                                        <th>Stato</th>
+                                        <th>Dettagli</th>
+                                        <th>Azioni</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for req in vm_requests %}
+                                    <tr>
+                                        <td>{{ req.id }}</td>
+                                        <td><span class="badge bg-info text-dark">{{ req.user_ref.username if req.user_ref else 'N/A' }}</span></td>
+                                        <td><span class="badge bg-secondary">{{ req.vm_type }}</span></td>
+                                        <td>
+                                            {% if req.status == 'PENDING' %}
+                                                <span class="badge bg-warning text-dark">PENDING</span>
+                                            {% elif req.status == 'APPROVED' %}
+                                                <span class="badge bg-success">APPROVED</span>
+                                            {% else %}
+                                                <span class="badge bg-danger">REJECTED</span>
+                                            {% endif %}
+                                        </td>
+                                        <td>
+                                            {% if req.status == 'APPROVED' %}
+                                                <div class="small">
+                                                    <p class="mb-1"><strong>IP:</strong> {{ req.ip or 'N/A' }}</p>
+                                                    <p class="mb-1"><strong>User:</strong> {{ req.vm_user or 'root' }}</p>
+                                                    <p class="mb-1"><strong>Password:</strong>Password&1</p>
+                                                    <p class="mb-1"><strong>SSH:</strong> <code>ssh root@{{ req.ip or 'N/A' }}</code></p>
+                                                </div>
+                                            {% elif req.status == 'REJECTED' %}
+                                                <span class="text-danger">Rifiutata</span>
+                                            {% else %}
+                                                <span class="text-muted">In attesa</span>
+                                            {% endif %}
+                                        </td>
+                                        <td>
+                                            {% if req.status == 'PENDING' %}
+                                                <div class="btn-group btn-group-sm">
+                                                    <a href="{{ url_for('admin.approve', request_id=req.id) }}" class="btn btn-success">Approva</a>
+                                                    <a href="{{ url_for('admin.reject', request_id=req.id) }}" class="btn btn-danger">Rifiuta</a>
+                                                </div>
+                                            {% elif req.status == 'APPROVED' %}
+                                                <div>
+                                                    <span class="text-success">Richiesta accettata</span>
+                                                </div>
+                                            {% else %}
+                                                <span class="text-danger">Rifiutata</span>
+                                            {% endif %}
+                                        </td>
+                                    </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    {% else %}
+                        <p class="text-muted mb-0">Nessuna richiesta VM presente.</p>
+                    {% endif %}                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
